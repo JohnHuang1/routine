@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routine/features/routine/data/hive_routine_repository.dart';
 import 'package:routine/features/routine/data/routine_repository.dart';
 import 'package:routine/features/routine/domain/routine.dart';
 
@@ -16,5 +17,5 @@ class RoutineService {
 
 final routineServiceProvider = Provider<RoutineService>((ref) {
   return RoutineService(
-      routineRepository: ref.watch(routineRepositoryProvider));
+      routineRepository: ref.watch(hiveRoutineRepositoryProvider));
 });

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routine/features/routine/data/hive_schedule_repository.dart';
 import 'package:routine/features/routine/data/schedule_repository.dart';
 import 'package:routine/features/routine/domain/schedule.dart';
 
@@ -24,5 +25,5 @@ class ScheduleService {
 
 final scheduleServiceProvider = Provider<ScheduleService>((ref) {
   return ScheduleService(
-      scheduleRepository: ref.watch(scheduleRepositoryProvider));
+      scheduleRepository: ref.watch(hiveScheduleRepositoryProvider));
 });

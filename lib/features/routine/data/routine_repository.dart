@@ -7,7 +7,6 @@ abstract class RoutineRepository {
   Stream<Routine> watchRoutine(RoutineID id);
 
   Future<void> setRoutine(Routine routine);
-}
 
-final routineRepositoryProvider =
-    Provider<RoutineRepository>(throw UnimplementedError());
+  Future<Routine> addRoutine(Routine routine);
+}

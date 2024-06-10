@@ -8,6 +8,3 @@ abstract class ScheduleRepository {
 
   Future<void> setSchedule(Schedule schedule);
 }
-
-final scheduleRepositoryProvider =
-    Provider<ScheduleRepository>(throw UnimplementedError());
