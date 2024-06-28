@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:routine/features/routine/application/routine_service.dart';
+import 'package:routine/features/routine/data/hive_action_repository.dart';
 import 'package:routine/features/routine/data/hive_routine_repository.dart';
 import 'package:routine/features/routine/data/hive_schedule_repository.dart';
 import 'package:routine/features/routine/data/routine_repository.dart';
 import 'package:routine/features/routine/domain/action.dart';
 import 'package:routine/features/routine/domain/field.dart';
-import 'package:routine/features/routine/presentation/list_display/schedule_display_widget.dart';
+import 'package:routine/features/routine/domain/routine.dart';
+import 'package:routine/features/routine/domain/schedule.dart';
+import 'package:routine/features/routine/presentation/list_display/schedule_list_page.dart';
+import 'package:routine/routing/go_router.dart';
 
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(FieldAdapter());
   Hive.registerAdapter(FieldTypeAdapter());
   Hive.registerAdapter(ActionAdapter());
+  Hive.registerAdapter(RoutineImplAdapter());
+  Hive.registerAdapter(ScheduleImplAdapter());
   runApp(
     ProviderScope(
       overrides: [
+        hiveActionRepositoryProvider.overrideWithValue(
+            HiveActionRepository(box: await Hive.openBox(actionRepositoryKey))),
         hiveRoutineRepositoryProvider.overrideWithValue(HiveRoutineRepository(
             box: await Hive.openBox(routineRepositoryKey))),
         hiveScheduleRepositoryProvider.overrideWithValue(HiveScheduleRepository(
@@ -27,46 +34,25 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp.router(
       title: 'Routine',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         brightness: Brightness.light,
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.white, brightness: Brightness.dark),
+            seedColor: Colors.cyan, brightness: Brightness.dark),
         brightness: Brightness.dark,
         useMaterial3: true,
       ),
-      home: const HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Routine'),
-      ),
-      body: const ScheduleDisplayWidget(),
-      floatingActionButton: FloatingActionButton.small(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Add Routine')));
-        },
-      ),
+      routerConfig: ref.watch(goRouterProvider),
     );
   }
 }

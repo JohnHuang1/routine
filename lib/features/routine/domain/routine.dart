@@ -16,18 +16,26 @@ class Routine extends HiveObject with _$Routine {
   factory Routine({
     @HiveField(0) required RoutineID id,
     @HiveField(1) required String name,
-    @HiveField(2) required List<ActionID> actions
+    @HiveField(2) required List<ActionID> actions,
   }) = _Routine;
 }
 
 extension MutableRoutine on Routine {
-  Routine insertAction(ActionID id, int pos) {
+  Routine insertAction(ActionID id, int? pos) {
     final copy = List<ActionID>.from(actions);
-    copy.insert(pos, id);
+    if(pos != null) {
+      copy.insert(pos, id);
+    } else {
+      copy.add(id);
+    }
     return copyWith(actions: copy);
   }
 
-  Routine updateID(RoutineID id) {
+  Routine setId(RoutineID id) {
     return copyWith(id: id);
+  }
+
+  Routine setName(String name) {
+    return copyWith(name: name);
   }
 }

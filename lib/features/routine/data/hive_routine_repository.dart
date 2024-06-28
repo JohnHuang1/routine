@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:routine/features/routine/data/routine_repository.dart';
 import 'package:routine/features/routine/domain/routine.dart';
+import 'package:rxdart/rxdart.dart';
 
 const routineRepositoryKey = 'routine';
 
@@ -21,14 +22,13 @@ class HiveRoutineRepository implements RoutineRepository {
 
   @override
   Future<void> setRoutine(Routine routine) {
-    box.put(routine.id, routine);
-    return Future.value();
+    return box.put(routine.id, routine);
   }
 
   @override
   Stream<Routine> watchRoutine(RoutineID id) {
-    // TODO: implement watchRoutine
-    throw UnimplementedError('WatchRoutine');
+    // if(box.containsKey(id)) throw Exception('HiveRepositoryError: watchRoutine bad id=$id');
+    return box.watch(key: id).map((event) => event.value as Routine).startWith(box.get(id)!);
   }
 
   @override
@@ -37,6 +37,11 @@ class HiveRoutineRepository implements RoutineRepository {
     final copy = routine.copyWith(id: id);
     box.put(id, copy);
     return copy;
+  }
+
+  @override
+  Future<void> deleteRoutine(RoutineID id) {
+    return box.delete(id);
   }
 }
 

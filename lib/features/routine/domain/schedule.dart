@@ -17,9 +17,15 @@ class Schedule extends HiveObject with _$Schedule {
 }
 
 extension MutableSchedule on Schedule {
-  Schedule setRoutine(Routine routine) {
+  Schedule addRoutine(RoutineID id) {
     final copy = List<RoutineID>.from(routines);
-    copy.add(routine.id);
+    copy.add(id);
+    return copyWith(routines: copy);
+  }
+
+  Schedule deleteRoutine(RoutineID id) {
+    final copy = List<RoutineID>.from(routines);
+    copy.remove(id);
     return copyWith(routines: copy);
   }
 }

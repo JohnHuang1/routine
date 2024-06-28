@@ -9,4 +9,6 @@ abstract class RoutineRepository {
   Future<void> setRoutine(Routine routine);
 
   Future<Routine> addRoutine(Routine routine);
+
+  Future<void> deleteRoutine(RoutineID id);
 }
